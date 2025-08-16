@@ -17,8 +17,9 @@ class Config:
         excluded for names such as warehouse, storage, depository, etc.<br><br>
         """
 
-        # Template
+        # Keys, etc
         self.s3_parameters_key = 's3_parameters.yaml'
+        self.arguments_key = 'numerics/arguments.json'
 
         # Temporary storage area for the artefacts
         self.data_: str = os.path.join(os.getcwd(), 'data')
