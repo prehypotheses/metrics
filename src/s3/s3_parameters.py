@@ -45,7 +45,7 @@ class S3Parameters:
         """
 
         buffer = src.s3.unload.Unload(s3_client=self.__s3_client).exc(
-            bucket_name=self.__secret.exc(secret_id='DispatchTokenClassification', node='configurations'),
+            bucket_name=self.__secret.exc(secret_id='FNTC', node='configurations'),
             key_name=self.__configurations.s3_parameters_key)
 
         try:
@@ -67,9 +67,9 @@ class S3Parameters:
 
         # Parsing variables
         region_name = self.__secret.exc(secret_id='RegionCodeDefault')
-        internal = self.__secret.exc(secret_id='DispatchTokenClassification', node='internal')
-        external = self.__secret.exc(secret_id='DispatchTokenClassification', node='external')
-        configurations = self.__secret.exc(secret_id='DispatchTokenClassification', node='configurations')
+        internal = self.__secret.exc(secret_id='FNTC', node='internal')
+        external = self.__secret.exc(secret_id='FNTC', node='external')
+        configurations = self.__secret.exc(secret_id='FNTC', node='configurations')
 
         s3_parameters: s3p.S3Parameters = s3_parameters._replace(
             location_constraint=region_name, region_name=region_name,
