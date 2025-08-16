@@ -39,11 +39,12 @@ class Interface:
         """
 
         connector = boto3.session.Session()
-        s3_parameters: s3p.S3Parameters = src.s3.s3_parameters.S3Parameters(connector=connector).exc()
+        arguments = self.__arguments(connector=connector)
+
+        s3_parameters: s3p.S3Parameters = src.s3.s3_parameters.S3Parameters(
+            connector=connector, project_key_name=arguments.get('project_key_name')).exc()
         service: sr.Service = src.functions.service.Service(
             connector=connector, region_name=s3_parameters.region_name).exc()
-
-        arguments = self.__arguments(connector=connector)
 
         # Setting up the cloud storage area
         src.preface.setup.Setup(service=service, s3_parameters=s3_parameters).exc()
