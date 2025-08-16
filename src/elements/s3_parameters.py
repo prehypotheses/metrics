@@ -30,9 +30,6 @@ class S3Parameters(typing.NamedTuple):
 
     configurations : str
       An Amazon S3 (Simple Storage Service) bucket.
-
-    store : str
-      An Amazon S3 (Simple Storage Service) bucket.
     """
 
     region_name: str
@@ -42,4 +39,3 @@ class S3Parameters(typing.NamedTuple):
     path_internal_artefacts: str
     external: str
     configurations : str
-    store : str
