@@ -50,6 +50,6 @@ class Limits:
         costs: pd.DataFrame = self.__get_data(filename='costs.json', orient='split')
         frequencies: pd.DataFrame = self.__get_data(filename='frequencies.json', orient='index')
         error: pd.DataFrame = self.__get_data(filename='error.json', orient='index')
-        dispatches: pd.DataFrame = self.__get_data(filename='dispatches.json', orient='split')
+        documents: pd.DataFrame = self.__get_data(filename='documents.json', orient='split')
 
-        return lm.Limits(costs=costs, frequencies=frequencies, error=error, dispatches=dispatches)
+        return lm.Limits(costs=costs, frequencies=frequencies, error=error, documents=documents)
