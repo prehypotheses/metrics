@@ -23,7 +23,7 @@ class Limits:
         self.__s3_parameters = s3_parameters
 
         # The Amazon S3 (Simple Storage Service) path.
-        self.__path = f's3://{self.__s3_parameters.configurations}/limits/'
+        self.__path = f's3://{self.__s3_parameters.configurations}/numerics/'
 
     def __get_data(self, filename: str, orient: str):
         """
@@ -37,7 +37,7 @@ class Limits:
             frame = pd.read_json(path_or_buf=(self.__path + filename), orient=orient)
         except FileNotFoundError as err:
             raise err from err
-        logging.info(frame)
+        logging.info('%s\n%s', filename, frame)
 
         return frame
 
