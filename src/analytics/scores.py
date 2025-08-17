@@ -28,7 +28,7 @@ class Scores:
 
         # Setting-up
         self.__objects = src.functions.objects.Objects()
-        self.__path = os.path.join(config.Config().numerics_, 'card', 'spider')
+        self.__path = os.path.join(config.Config().numerics_, 'card', 'scores')
 
         # The metrics in focus
         self.__names = {'precision': "Precision", 'sensitivity': "Sensitivity", 'specificity': 'Specificity',
