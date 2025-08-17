@@ -38,7 +38,7 @@ def main():
     logger.info(properties.derivations)
 
     # Analytics
-    # src.analytics.interface.Interface(s3_parameters=s3_parameters).exc(derivations=properties.derivations, tags=tags)
+    src.analytics.interface.Interface(s3_parameters=s3_parameters).exc(derivations=properties.derivations, tags=tags)
 
     # Abstracts
     # src.abstracts.interface.Interface().exc(architecture=properties.architecture, tags=tags)
