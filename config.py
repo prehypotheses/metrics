@@ -34,7 +34,7 @@ class Config:
         self.numerics_ = os.path.join(self.warehouse, 'numerics')
         self.graphs_ = [os.path.join(self.numerics_, 'best', 'model'),
                         os.path.join(self.numerics_, 'card', 'bullet'),
-                        os.path.join(self.numerics_, 'card', 'spider'),
+                        os.path.join(self.numerics_, 'card', 'scores'),
                         os.path.join(self.numerics_, 'cost', 'fnr'),
                         os.path.join(self.numerics_, 'cost', 'fpr'),
                         os.path.join(self.numerics_, 'abstracts')]
