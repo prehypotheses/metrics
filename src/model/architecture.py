@@ -73,7 +73,7 @@ class Architecture:
         :return:
         """
 
-        __src = os.path.join(os.getcwd(), 'data', 'artefacts', architecture, 'prime', 'model')
+        __src = os.path.join(os.getcwd(), 'data', 'artefacts', architecture, 'optimal', 'model')
         __dst = os.path.join(self.__storage, 'model')
 
         try:
