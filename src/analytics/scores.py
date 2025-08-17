@@ -1,4 +1,4 @@
-"""Module spider.py"""
+"""Module scores.py"""
 import logging
 import os
 
@@ -10,7 +10,7 @@ import src.functions.directories
 import src.functions.objects
 
 
-class Spider:
+class Scores:
     """
     Class Spider
     """
