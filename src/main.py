@@ -16,32 +16,33 @@ def main():
 
     logger: logging.Logger = logging.getLogger(__name__)
     logger.info('Starting: %s', datetime.datetime.now().isoformat(timespec='microseconds'))
+    logger.info(arguments)
 
     # Data
     src.data.interface.Interface(service=service, s3_parameters=s3_parameters).exc()
 
     # Tags
-    tags = src.model.tags.Tags(s3_parameters=s3_parameters).exc()
+    # tags = src.model.tags.Tags(s3_parameters=s3_parameters).exc()
 
     # The best model/architecture
-    architecture: str = src.model.architecture.Architecture().exc()
-    logger.info('The best model/architecture: %s', architecture)
+    # architecture: str = src.model.architecture.Architecture().exc()
+    # logger.info('The best model/architecture: %s', architecture)
 
     # Time
-    src.model.latest.Latest().exc()
+    # src.model.latest.Latest().exc()
 
     # The error measures & metrics of the model
-    properties = src.model.properties.Properties(architecture=architecture).exc(tags=tags)
-    logger.info(properties.derivations)
+    # properties = src.model.properties.Properties(architecture=architecture).exc(tags=tags)
+    # logger.info(properties.derivations)
 
     # Analytics
-    src.analytics.interface.Interface(s3_parameters=s3_parameters).exc(derivations=properties.derivations, tags=tags)
+    # src.analytics.interface.Interface(s3_parameters=s3_parameters).exc(derivations=properties.derivations, tags=tags)
 
     # Abstracts
-    src.abstracts.interface.Interface().exc(architecture=properties.architecture, tags=tags)
+    # src.abstracts.interface.Interface().exc(architecture=properties.architecture, tags=tags)
 
     # Transfer
-    src.transfer.interface.Interface(service=service, s3_parameters=s3_parameters).exc()
+    # src.transfer.interface.Interface(service=service, s3_parameters=s3_parameters).exc()
 
     # Delete Cache Points
     src.functions.cache.Cache().exc()
