@@ -22,11 +22,12 @@ def main():
     src.data.interface.Interface(service=service, s3_parameters=s3_parameters).exc()
 
     # Tags
-    # tags = src.model.tags.Tags(s3_parameters=s3_parameters).exc()
+    tags = src.model.tags.Tags(s3_parameters=s3_parameters).exc()
+    logger.info(tags)
 
     # The best model/architecture
-    # architecture: str = src.model.architecture.Architecture().exc()
-    # logger.info('The best model/architecture: %s', architecture)
+    architecture: str = src.model.architecture.Architecture().exc()
+    logger.info('The best model/architecture: %s', architecture)
 
     # Time
     # src.model.latest.Latest().exc()
