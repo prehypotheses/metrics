@@ -30,11 +30,12 @@ def main():
     logger.info('The best model/architecture: %s', architecture)
 
     # Time
-    # src.model.latest.Latest().exc()
+    src.model.latest.Latest().exc()
 
     # The error measures & metrics of the model
-    # properties = src.model.properties.Properties(architecture=architecture).exc(tags=tags)
-    # logger.info(properties.derivations)
+    properties = src.model.properties.Properties(architecture=architecture).exc(tags=tags)
+    logger.info(properties.architecture)
+    logger.info(properties.derivations)
 
     # Analytics
     # src.analytics.interface.Interface(s3_parameters=s3_parameters).exc(derivations=properties.derivations, tags=tags)
