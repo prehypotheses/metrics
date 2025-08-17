@@ -3,6 +3,7 @@ import logging
 
 import pandas as pd
 
+import config
 import src.elements.s3_parameters as s3p
 import src.elements.text_attributes as txa
 import src.functions.streams
@@ -24,6 +25,7 @@ class Tags:
         """
 
         self.__s3_parameters = s3_parameters
+        self.__configurations = config.Config()
 
     def exc(self) -> pd.DataFrame:
         """
@@ -32,7 +34,7 @@ class Tags:
         """
 
         # Setting up
-        uri = 's3://' + self.__s3_parameters.configurations + '/labels/tags.csv'
+        uri = 's3://' + self.__s3_parameters.configurations + f'/{self.__configurations.tags_key}'
         text = txa.TextAttributes(uri=uri, header=0)
 
         # Read the tags data
