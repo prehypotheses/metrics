@@ -15,7 +15,7 @@ class Interface:
     Class Interface
     """
 
-    def __init__(self, service: sr.Service,  s3_parameters: s3p):
+    def __init__(self, service: sr.Service, s3_parameters: s3p.S3Parameters):
         """
 
         :param service: A suite of services for interacting with Amazon Web Services.
