@@ -15,8 +15,7 @@ class CFN:
 
         :param costs: A dataframe of cost per category, and per rate type
               <ul>
-                <li>Categories: Of this project &rarr; <b>GEO</b>: geographic, <b>GPE</b>: geopolitical,
-                    <b>ORG</b>: organisation, <b>PER</b>: person, <b>TIM</b>: time, <b>O</b>: miscellaneous</li>
+                <li>Categories: Of this project &rarr; <b>art</b>: art, etc</li>
                 <li>Rate Types: false negative rate (fnr), false positive rate (fpr)</li>
               </ul><br>
         :param numbers: Per category, and per annum, it summarises the approximate minimum & maximum expected
@@ -66,8 +65,7 @@ class CFN:
         """
 
         :param category:
-        :param rates: The false negative rate estimates of a category; split by
-                annotation type, i.e., I (inside), B (beginning)
+        :param rates: The false negative rate estimates of a category.
         :param boundary: The upper boundary of a false negative rate
         :return:
         """
