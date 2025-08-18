@@ -52,13 +52,13 @@ class Bars:
         """
 
         # tags: tag|category|category_name|group & fine_ner_tags
-        frequencies = data['fine_ner_tag'].map(collections.Counter).sum()
+        frequencies = data['fine_ner_tags'].map(collections.Counter).sum()
         items = [[k, frequencies[k]] for k, v in frequencies.items()]
 
         # As a data frame
-        frame = pd.DataFrame(data=items, columns=['fine_ner_tag', 'frequency'])
+        frame = pd.DataFrame(data=items, columns=['fine_ner_tags', 'frequency'])
         frame.rename(columns={'frequency': name}, inplace=True)
-        frame.set_index(keys='fine_ner_tag', drop=True, inplace=True)
+        frame.set_index(keys='fine_ner_tags', drop=True, inplace=True)
 
         return frame
 
@@ -91,7 +91,7 @@ class Bars:
 
         frame = pd.concat(computations, axis=1, ignore_index=False)
         frame.reset_index(drop=False, inplace=True)
-        data = frame.copy().merge(self.__tags.copy()[['fine_ner_tag', 'tag']], how='left', on='fine_ner_tag')
+        data = frame.copy().merge(self.__tags.copy()[['fine_ner_tags', 'tag']], how='left', on='fine_ner_tags')
         data.set_index(keys='tag', drop=True, inplace=True)
 
         return data
