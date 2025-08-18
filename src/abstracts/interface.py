@@ -66,8 +66,8 @@ class Interface:
         # The model's configuration details
         m_config = self.__m_config(architecture=architecture)
 
-        # Get the numeric code, i.e., `fine_ner_tag`, of each text label, i.e., `tag`
-        tags = tags.assign(fine_ner_tag=tags['tag'].map(m_config['label2id']))
+        # Get the numeric code, i.e., `fine_ner_tags`, of each text label, i.e., `tag`
+        tags = tags.assign(fine_ner_tags=tags['tag'].map(m_config['label2id']))
 
         # Get the modelling data
         data = self.__get_data(architecture=architecture)
