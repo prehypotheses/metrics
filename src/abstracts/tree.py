@@ -1,8 +1,8 @@
 """Module tree.py"""
 import collections
 import os
-import pathlib
 
+import datasets
 import pandas as pd
 
 import config
@@ -46,31 +46,29 @@ class Tree:
         :return:
         """
 
-        # Tags: tag/annotation/annotation_name/category/category_name
-        descriptions = self.__tags[['tag', 'group']].set_index('tag').to_dict()['group']
-        frequencies = data['tagstr'].str.upper().str.split(pat=',', n=-1, expand=False).map(collections.Counter).sum()
+        # tags: tag|category|category_name|group & fine_ner_tags
+        descriptions = self.__tags[['fine_ner_tags', 'category_name']].set_index('fine_ner_tags').to_dict()['category_name']
+
+        # frequencies dictionary: Each key is a fine entity tag, whilst each value is the tag count
+        frequencies = data['fine_ner_tags'].map(collections.Counter).sum()
         items = [[k, frequencies[k], descriptions[k]] for k, v in frequencies.items()]
 
         # As a data frame
-        frame = pd.DataFrame(data=items, columns=['tag', 'frequency', 'group'])
-        frame = frame.copy().merge(self.__tags[['tag', 'annotation_name']], on='tag', how='left')
+        frame = pd.DataFrame(data=items, columns=['fine_ner_tags', 'frequency', 'category_name'])
+        frame = frame.copy().merge(self.__tags[['fine_ner_tags', 'tag', 'group']], on='fine_ner_tags', how='left')
 
         return frame
 
     @staticmethod
-    def __restructuring(frequencies: pd.DataFrame) -> dict:
+    def __restructuring(frequencies: pd.DataFrame) -> dict | list[dict]:
         """
 
         :param frequencies:
         :return:
         """
 
-        excerpt = frequencies.loc[frequencies['tag'] != 'O', :]
-        frame: pd.DataFrame = excerpt.pivot(index='group', columns='annotation_name', values='frequency')
-        node = frame.to_dict(orient='index')
 
-        miscellaneous = frequencies.loc[frequencies['tag'] == 'O', 'frequency'].values[0]
-        node['Miscellaneous'] = {'beginning': int(miscellaneous), 'inside': 0}
+        node = frequencies.to_dict(orient='records')
 
         return node
 
@@ -86,20 +84,20 @@ class Tree:
             nodes=nodes,
             path=os.path.join(self.__configurations.numerics_, 'abstracts', f'{name }.json'))
 
-    def exc(self, uri_: list):
+    def exc(self, parts: datasets.DatasetDict):
         """
 
+        :param parts:
         :return:
         """
 
         computation = collections.ChainMap()
 
-        for uri in uri_:
-            stem = pathlib.Path(uri).stem
-            data = self.__data(uri=uri)
+        for name in list(parts.keys()):
+            data = parts[name].to_pandas()
             frequencies = self.__frequencies(data=data)
             node = self.__restructuring(frequencies=frequencies)
-            computation.update({f'{stem}': node})
+            computation.update({f'{name}': node})
         nodes = dict(computation)
 
         self.__persist(nodes=nodes, name='tree')
