@@ -47,15 +47,15 @@ class Tree:
         """
 
         # tags: tag|category|category_name|group & fine_ner_tags
-        descriptions = self.__tags[['fine_ner_tag', 'category_name']].set_index('fine_ner_tag').to_dict()['category_name']
+        descriptions = self.__tags[['fine_ner_tags', 'category_name']].set_index('fine_ner_tags').to_dict()['category_name']
 
         # frequencies dictionary: Each key is a fine entity tag, whilst each value is the tag count
-        frequencies = data['fine_ner_tag'].map(collections.Counter).sum()
+        frequencies = data['fine_ner_tags'].map(collections.Counter).sum()
         items = [[k, frequencies[k], descriptions[k]] for k, v in frequencies.items()]
 
         # As a data frame
-        frame = pd.DataFrame(data=items, columns=['fine_ner_tag', 'frequency', 'category_name'])
-        frame = frame.copy().merge(self.__tags[['fine_ner_tag', 'tag', 'group']], on='fine_ner_tag', how='left')
+        frame = pd.DataFrame(data=items, columns=['fine_ner_tags', 'frequency', 'category_name'])
+        frame = frame.copy().merge(self.__tags[['fine_ner_tags', 'tag', 'group']], on='fine_ner_tags', how='left')
 
         return frame
 
