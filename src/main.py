@@ -41,7 +41,7 @@ def main():
     src.analytics.interface.Interface(s3_parameters=s3_parameters).exc(derivations=properties.derivations, tags=tags)
 
     # Abstracts
-    # src.abstracts.interface.Interface().exc(architecture=properties.architecture, tags=tags)
+    src.abstracts.interface.Interface(s3_parameters=s3_parameters).exc(architecture=properties.architecture, tags=tags)
 
     # Transfer
     # src.transfer.interface.Interface(service=service, s3_parameters=s3_parameters).exc()
