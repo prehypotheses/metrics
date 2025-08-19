@@ -52,12 +52,12 @@ class Bullet:
         return self.__objects.write(nodes=nodes, path=os.path.join(self.__path, name))
 
     @dask.delayed
-    def __build(self, excerpt: pd.DataFrame, name: str, category: str) -> str:
+    def __build(self, excerpt: pd.DataFrame, name: str, tag: str) -> str:
         """
 
         :param excerpt:
         :param name:
-        :param category:
+        :param tag:
         :return:
         """
 
@@ -65,9 +65,9 @@ class Bullet:
 
         # The dictionary of the instances
         nodes = excerpt.to_dict(orient='split')
-        nodes['target'] = self.__error.loc[category, nodes['columns']].to_list()
+        nodes['target'] = self.__error.loc[tag, nodes['columns']].to_list()
+        logging.info(nodes)
 
-        # Save
         return self.__save(nodes=nodes, name=f'{name}.json')
 
     def exc(self, derivations: pd.DataFrame, definitions: dict):
@@ -75,24 +75,24 @@ class Bullet:
 
         :param derivations: A data frame consisting of error matrix frequencies & metrics, alongside
                             tags & categories identifiers.
-        :param definitions: A dict wherein key === category code, value === category code definition
+        :param definitions: A dict wherein key === tag, value === category
         :return:
         """
 
         data = derivations.copy()
 
         # The unique tag categories
-        categories = data['category'].unique()
+        tags = data['tag'].unique()
 
         # The tag & category values are required for data structuring
         data.set_index(keys=['tag'], drop=False, inplace=True)
 
         # Hence
         computations = []
-        for category in categories:
-            name = definitions[category]
-            excerpt: pd.DataFrame = data.loc[data['category'] == category, self.__names.keys()]
-            message = self.__build(excerpt=excerpt, name=name, category=category)
+        for tag in tags:
+            name = definitions[tag]
+            excerpt: pd.DataFrame = data.loc[data['tag'] == tag, self.__names.keys()]
+            message = self.__build(excerpt=excerpt, name=name, tag=tag)
             computations.append(message)
 
         messages = dask.compute(computations, scheduler='threads')[0]
