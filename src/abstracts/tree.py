@@ -27,7 +27,7 @@ class Tree:
         self.__configurations = config.Config()
 
         # Renaming
-        self.__rename = {'category_name': 'name', 'frequency': 'value', 'tag': 'description'}
+        self.__rename = {'category': 'name', 'frequency': 'value', 'tag': 'description'}
 
         # Colours
         self.__colours = {'train': '#A09FA8', 'validation': '#F5FBEF', 'test': '#A9B4C2'}
@@ -39,15 +39,15 @@ class Tree:
         :return:
         """
 
-        # tags: tag|category|category_name|group & fine_ner_tags
-        descriptions = self.__tags[['fine_ner_tags', 'category_name']].set_index('fine_ner_tags').to_dict()['category_name']
+        # tags: tag|category|group & fine_ner_tags
+        descriptions = self.__tags[['fine_ner_tags', 'category']].set_index('fine_ner_tags').to_dict()['category']
 
         # frequencies dictionary: Each key is a fine entity tag, whilst each value is the tag count
         frequencies = data['fine_ner_tags'].map(collections.Counter).sum()
         items = [[k, frequencies[k], descriptions[k]] for k, v in frequencies.items()]
 
         # As a data frame
-        frame = pd.DataFrame(data=items, columns=['fine_ner_tags', 'frequency', 'category_name'])
+        frame = pd.DataFrame(data=items, columns=['fine_ner_tags', 'frequency', 'category'])
         frame = frame.copy().merge(self.__tags[['fine_ner_tags', 'tag']], on='fine_ner_tags', how='left')
 
         return frame
