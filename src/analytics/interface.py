@@ -1,6 +1,4 @@
 """Module interface.py"""
-import logging
-
 import numpy as np
 import pandas as pd
 
@@ -85,11 +83,9 @@ class Interface:
 
         # Numbers
         numbers = self.__numbers(limits=limits)
-        logging.info(numbers)
 
         # Definitions: Whereby key === tag, value === category, i.e., definition
         definitions = self.__definitions(tags=tags)
-        logging.info(definitions)
 
         # For (a) spider graphs of error metrics, (b) bullet graphs of false negative rates & false positive
         # rates, (c) cost curves
