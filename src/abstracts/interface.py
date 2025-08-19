@@ -74,7 +74,8 @@ class Interface:
         logging.info(data)
 
         # An approximate spread of strings
-        attributes = tags[['fine_ner_tags', 'category_name']].set_index(keys='fine_ner_tags').to_dict(orient='dict')['category_name']
+        attributes = tags[['fine_ner_tags', 'category_name']].set_index(
+            keys='fine_ner_tags').to_dict(orient='dict')['category_name']
         messages = [src.abstracts.text.Text(parts=data).exc(code=k, category_name=v) for k, v in attributes.items()]
         logging.info(messages)
 
