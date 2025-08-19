@@ -39,7 +39,6 @@ class Config:
                         os.path.join(self.numerics_, 'cost', 'fpr'),
                         os.path.join(self.numerics_, 'abstracts', 'text')]
 
-        # Rates, self.__rates: np.ndarray = self.__rates[..., None]
-        # :param rates: An array of rate values; (0, 1\]<br>
+        # Rates
         self.rates: np.ndarray = np.linspace(start=0, stop=1, num=101)
         self.rates: np.ndarray = (self.rates[1:])[..., None]
