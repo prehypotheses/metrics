@@ -22,7 +22,7 @@ def main():
     src.data.interface.Interface(service=service, s3_parameters=s3_parameters).exc()
 
     # Tags
-    tags = src.model.tags.Tags(s3_parameters=s3_parameters).exc()
+    tags = src.model.tags.Tags(s3_parameters=s3_parameters, arguments=arguments).exc()
 
     # The best model/architecture
     architecture: str = src.model.architecture.Architecture().exc()
@@ -41,7 +41,7 @@ def main():
     src.abstracts.interface.Interface(s3_parameters=s3_parameters).exc(architecture=properties.architecture, tags=tags)
 
     # Transfer
-    # src.transfer.interface.Interface(service=service, s3_parameters=s3_parameters).exc()
+    src.transfer.interface.Interface(service=service, s3_parameters=s3_parameters).exc()
 
     # Delete Cache Points
     src.functions.cache.Cache().exc()
