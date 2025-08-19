@@ -38,8 +38,10 @@ class Interface:
         # The strings for transferring data to Amazon S3 (Simple Storage Service)
         strings: pd.DataFrame = self.__dictionary.exc(
             path=os.path.join(os.getcwd(), 'warehouse'), extension='*', prefix='warehouse/')
+        logging.info(strings)
+        strings.to_csv('strings.csv', header=True, index=False, encoding='utf-8')
 
         # Transfer
         messages = src.s3.ingress.Ingress(
-            service=self.__service, bucket_name=self.__s3_parameters.external).exc(strings=strings)
+            service=self.__service, bucket_name=self.__s3_parameters.external).exc(strings=strings, tagging='project=few')
         logging.info(messages)
