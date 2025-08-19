@@ -6,9 +6,7 @@ import datasets
 import pandas as pd
 
 import config
-import src.elements.text_attributes as txa
 import src.functions.objects
-import src.functions.streams
 
 
 class Tree:
@@ -26,18 +24,6 @@ class Tree:
 
         # Instances
         self.__configurations = config.Config()
-        self.__streams = src.functions.streams.Streams()
-
-    def __data(self, uri: str) -> pd.DataFrame:
-        """
-
-        :param uri:
-        :return:
-        """
-
-        text = txa.TextAttributes(uri=uri, header=0)
-
-        return self.__streams.read(text=text)
 
     def __frequencies(self, data: pd.DataFrame):
         """
