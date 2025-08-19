@@ -1,5 +1,4 @@
 """Module tree.py"""
-import logging
 import collections
 import os
 
@@ -91,7 +90,6 @@ class Tree:
             data = parts[part].to_pandas()
             frequencies = self.__frequencies(data=data)
             node = self.__restructuring(frequencies=frequencies.copy(), part=part)
-            logging.info(node)
             computation = computation + node
 
         self.__persist(nodes=computation, name='tree')
