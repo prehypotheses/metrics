@@ -68,9 +68,9 @@ class Interface:
         :return:
         """
 
-        values = tags[['category', 'category_name']].set_index(keys='category').to_dict(orient='dict')
+        values = tags[['tag', 'category']].set_index(keys='tag').to_dict(orient='dict')
 
-        return values['category_name']
+        return values['category']
 
     def exc(self, derivations: pd.DataFrame, tags: pd.DataFrame) -> None:
         """
@@ -87,7 +87,7 @@ class Interface:
         numbers = self.__numbers(limits=limits)
         logging.info(numbers)
 
-        # Definitions: Whereby key === category code, value === category code definition
+        # Definitions: Whereby key === tag, value === category, i.e., definition
         definitions = self.__definitions(tags=tags)
         logging.info(definitions)
 
