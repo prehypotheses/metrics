@@ -7,9 +7,7 @@ import datasets
 import pandas as pd
 
 import config
-import src.elements.text_attributes as txa
 import src.functions.objects
-import src.functions.streams
 
 
 class Bars:
@@ -27,21 +25,9 @@ class Bars:
 
         # Instances
         self.__configurations = config.Config()
-        self.__streams = src.functions.streams.Streams()
 
         # Graphing categories
         self.__categories = ['train', 'validation', 'test']
-
-    def __data(self, uri: str) -> pd.DataFrame:
-        """
-
-        :param uri:
-        :return:
-        """
-
-        text = txa.TextAttributes(uri=uri, header=0)
-
-        return self.__streams.read(text=text)
 
     @staticmethod
     def __frequencies(data: pd.DataFrame, name: str):
