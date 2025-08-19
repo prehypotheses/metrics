@@ -17,12 +17,9 @@ class TCE:
         """
 
         :param instance: The parts are 'sentence' & 'code_per_tag'
-        :param code:
+        :param code: The identification code of a tag; code === fine_ner_tag
         :return:
         """
-
-        logging.info('Latest: %s, %s',
-                     instance['tokens'].shape, instance['fine_ner_tags'].shape)
 
         # A temporary frame that associates each text piece with its tag code
         frame = pd.DataFrame(
