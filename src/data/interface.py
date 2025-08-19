@@ -79,7 +79,6 @@ class Interface:
         # Get the artefacts metadata
         strings = src.data.artefacts.Artefacts(
             service=self.__service, s3_parameters=self.__s3_parameters).exc()
-        logging.info(strings)
 
         # The artefacts
         self.__data(strings=strings)
