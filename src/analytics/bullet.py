@@ -66,7 +66,6 @@ class Bullet:
         # The dictionary of the instances
         nodes = excerpt.to_dict(orient='split')
         nodes['target'] = self.__error.loc[tag, nodes['columns']].to_list()
-        logging.info(nodes)
 
         return self.__save(nodes=nodes, name=f'{name}.json')
 
