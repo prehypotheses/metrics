@@ -39,32 +39,32 @@ class Cost:
         self.__cfp = src.analytics.cfp.CFP(costs=self.__limits.costs, numbers=self.__numbers)
 
     @dask.delayed
-    def __fnr(self, category: str) -> dict:
+    def __fnr(self, tag: str) -> dict:
         """
 
-        :param category:
+        :param tag:
         :return:
         """
 
-        excerpt = self.__derivations.loc[self.__derivations['category'] == category, ['tag', 'fnr']].set_index(keys='tag')
+        excerpt = self.__derivations.loc[self.__derivations['tag'] == tag, ['tag', 'fnr']].set_index(keys='tag')
         rates = excerpt.to_dict(orient='dict')['fnr']
-        boundary = self.__limits.error.loc[category, 'fnr']
+        boundary = self.__limits.error.loc[tag, 'fnr']
 
-        return self.__cfn.exc(category=category, rates=rates, boundary=boundary)
+        return self.__cfn.exc(tag=tag, rates=rates, boundary=boundary)
 
     @dask.delayed
-    def __fpr(self, category: str) -> dict:
+    def __fpr(self, tag: str) -> dict:
         """
 
-        :param category:
+        :param tag:
         :return:
         """
 
-        excerpt = self.__derivations.loc[self.__derivations['category'] == category, ['tag', 'fpr']].set_index(keys='tag')
+        excerpt = self.__derivations.loc[self.__derivations['tag'] == tag, ['tag', 'fpr']].set_index(keys='tag')
         rates = excerpt.to_dict(orient='dict')['fpr']
-        boundary = self.__limits.error.loc[category, 'fpr']
+        boundary = self.__limits.error.loc[tag, 'fpr']
 
-        return self.__cfp.exc(category=category, rates=rates, boundary=boundary)
+        return self.__cfp.exc(tag=tag, rates=rates, boundary=boundary)
 
     @dask.delayed
     def __persist(self, nodes: dict, metric: str, name: str) -> str:
@@ -84,19 +84,17 @@ class Cost:
     def exc(self, definitions: dict):
         """
 
-        :param definitions: A dict wherein key === category code, value === category code definition
+        :param definitions: A dict wherein key === tag, value === category
         :return:
         """
 
-        categories = list(self.__numbers.index)
+        tags = list(self.__numbers.index)
         computations = []
-        for category in categories:
-
-            fnr = self.__fnr(category=category)
-            _fnr = self.__persist(nodes=fnr, metric='fnr', name=definitions[category])
-            fpr = self.__fpr(category=category)
-            _fpr = self.__persist(nodes=fpr, metric='fpr', name=definitions[category])
-
+        for tag in tags:
+            fnr = self.__fnr(tag=tag)
+            _fnr = self.__persist(nodes=fnr, metric='fnr', name=definitions[tag])
+            fpr = self.__fpr(tag=tag)
+            _fpr = self.__persist(nodes=fpr, metric='fpr', name=definitions[tag])
             computations.append([_fnr, _fpr])
 
         calculations = dask.compute(computations, scheduler='threads')[0]
