@@ -13,13 +13,13 @@ class CFN:
     def __init__(self, costs: pd.DataFrame, numbers: pd.DataFrame):
         """
 
-        :param costs: A dataframe of cost per category, and per rate type
+        :param costs: A dataframe of cost per tag, and per rate type
               <ul>
-                <li>Categories: Of this project &rarr; <b>art</b>: art, etc</li>
+                <li>Tags: Of this project &rarr; <b>art</b>: art, etc</li>
                 <li>Rate Types: false negative rate (fnr), false positive rate (fpr)</li>
               </ul><br>
-        :param numbers: Per category, and per annum, it summarises the approximate minimum & maximum expected
-                        occurrences of words in the category.<br>
+        :param numbers: Per tag, and per annum, it summarises the approximate minimum & maximum expected
+                        occurrences of words of a tag.<br>
         """
 
         self.__rates = config.Config().rates
@@ -61,20 +61,20 @@ class CFN:
 
         return nodes
 
-    def exc(self, category: str, rates: dict, boundary: float) -> dict:
+    def exc(self, tag: str, rates: dict, boundary: float) -> dict:
         """
 
-        :param category:
+        :param tag:
         :param rates: The false negative rate estimates of a category.
         :param boundary: The upper boundary of a false negative rate
         :return:
         """
 
-        # False Negative Rate Cost per Category
-        cost: int = self.__costs.loc['fnr', category]
+        # False Negative Rate Cost per tag
+        cost: int = self.__costs.loc['fnr', tag]
 
         # The approximate minimum & maximum ...
-        boundaries: pd.DataFrame = self.__numbers.loc[category, :]
+        boundaries: pd.DataFrame = self.__numbers.loc[tag, :]
 
         # Hence
         estimates = self.__estimates_fnr(cost=cost, boundaries=boundaries)
