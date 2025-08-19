@@ -1,9 +1,9 @@
 """Module text.py"""
 import collections
 import os
-import pathlib
 
 import dask
+import datasets
 import pandas as pd
 
 import config
@@ -18,53 +18,29 @@ class Text:
     Text
     """
 
-    def __init__(self):
+    def __init__(self, parts: datasets.DatasetDict):
         """
-        Constructor
+
+        :param parts:
         """
+
+        self.__parts = parts
+        self.__names = list(self.__parts.keys())
 
         # Instances
         self.__configurations = config.Config()
-        self.__streams = src.functions.streams.Streams()
         self.__tce = src.abstracts.tce.TCE()
 
     @dask.delayed
-    def __data(self, uri: str) -> pd.DataFrame:
-        """
-
-        :param uri: A list of uniform resource identifiers, i.e., local <path> + <file name & extension> strings.
-        :return:
-            A training, validating, or testing data set, which includes a field of sentences alongside a field of
-            each sentence's tags & tag codes.
-        """
-
-        text = src.elements.text_attributes.TextAttributes(uri=uri, header=0)
-
-        return self.__streams.read(text=text)
-
-    @dask.delayed
-    def __string(self, data: pd.DataFrame) -> pd.DataFrame:
+    def __elements(self, data: pd.DataFrame, code: int) -> pd.DataFrame:
         """
 
         :param data:
+        :param code:
         :return:
         """
 
-        frame = data.copy()
-        frame['string'] = frame['sentence'].str.split().map(','.join)
-
-        return frame
-
-    @dask.delayed
-    def __elements(self, data: pd.DataFrame, codes: list[int]) -> pd.DataFrame:
-        """
-
-        :param data:
-        :param codes:
-        :return:
-        """
-
-        return self.__tce.exc(data=data, codes=codes)
+        return self.__tce.exc(data=data, code=code)
 
     @dask.delayed
     def __dictionary(self, data: pd.DataFrame) -> list:
@@ -89,28 +65,25 @@ class Text:
 
         return src.functions.objects.Objects().write(
             nodes=nodes,
-            path=os.path.join(self.__configurations.numerics_, 'abstracts', f'{name}.json'))
+            path=os.path.join(self.__configurations.numerics_, 'abstracts', 'text', f'{name}.json'))
 
-    def exc(self, uri_: list[str], codes: list[int]):
+    def exc(self, code: int, category_name: str) -> str:
         """
 
-        :param uri_: A list of uniform resource identifiers, i.e., local <path> + <file name & extension> strings.
-        :param codes: The tag codes in focus; normally tag codes associated with the same category.
+        :param code:
+        :param category_name:
         :return:
         """
 
         computation = []
-        for uri in uri_:
-            stem = pathlib.Path(uri).stem
-            data: pd.DataFrame = self.__data(uri=uri)
-            data: pd.DataFrame = self.__string(data=data)
-            data: pd.DataFrame = self.__elements(data=data, codes=codes)
+        for name in self.__names:
+            data: pd.DataFrame = self.__parts[name].to_pandas()
+            data: pd.DataFrame = self.__elements(data=data, code=code)
             dictionary = self.__dictionary(data=data)
-
-            computation.append({f'{stem}': dictionary})
+            computation.append({f'{name}': dictionary})
 
         sections: list[dict] = dask.compute(computation, scheduler='threads')[0]
 
         nodes = {key: {'data': value} for section in sections for key, value in section.items()}
 
-        self.__persist(nodes=nodes, name='text')
+        return self.__persist(nodes=nodes, name=category_name)
