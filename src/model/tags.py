@@ -3,7 +3,6 @@ import logging
 
 import pandas as pd
 
-import config
 import src.elements.s3_parameters as s3p
 import src.elements.text_attributes as txa
 import src.functions.streams
@@ -27,9 +26,6 @@ class Tags:
 
         self.__s3_parameters = s3_parameters
         self.__arguments = arguments
-
-        # Configurations
-        self.__configurations = config.Config()
 
     def exc(self) -> pd.DataFrame:
         """
