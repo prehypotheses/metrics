@@ -1,5 +1,4 @@
 """Module limits.py"""
-import logging
 import pandas as pd
 
 import src.elements.limits as lm
@@ -23,7 +22,7 @@ class Limits:
         self.__s3_parameters = s3_parameters
 
         # The Amazon S3 (Simple Storage Service) path.
-        self.__path = f's3://{self.__s3_parameters.configurations}/limits/'
+        self.__path = f's3://{self.__s3_parameters.configurations}/numerics/'
 
     def __get_data(self, filename: str, orient: str):
         """
@@ -37,7 +36,6 @@ class Limits:
             frame = pd.read_json(path_or_buf=(self.__path + filename), orient=orient)
         except FileNotFoundError as err:
             raise err from err
-        logging.info(frame)
 
         return frame
 
@@ -50,6 +48,6 @@ class Limits:
         costs: pd.DataFrame = self.__get_data(filename='costs.json', orient='split')
         frequencies: pd.DataFrame = self.__get_data(filename='frequencies.json', orient='index')
         error: pd.DataFrame = self.__get_data(filename='error.json', orient='index')
-        dispatches: pd.DataFrame = self.__get_data(filename='dispatches.json', orient='split')
+        documents: pd.DataFrame = self.__get_data(filename='documents.json', orient='split')
 
-        return lm.Limits(costs=costs, frequencies=frequencies, error=error, dispatches=dispatches)
+        return lm.Limits(costs=costs, frequencies=frequencies, error=error, documents=documents)

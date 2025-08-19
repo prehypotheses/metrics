@@ -4,7 +4,7 @@ var Highcharts;
 var optionSelected;
 var dropdown = $('#option_selector');
 
-var url = '../assets/menu/scores.json'
+var url = '../assets/menu/menu.json'
 
 
 // Menu details
@@ -42,7 +42,7 @@ dropdown.on('change', function (e) {
 function generateChart(fileNameKey) {
 
 
-    $.getJSON('../../warehouse/numerics/card/spider/' + fileNameKey + '.json', function (calculations) {
+    $.getJSON('../../warehouse/numerics/card/scores/' + fileNameKey + '.json', function (calculations) {
 
         // https://api.highcharts.com/highstock/tooltip.pointFormat
         // https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/demo/bubble

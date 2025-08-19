@@ -2,14 +2,12 @@
 import collections
 import json
 import os
-import pathlib
 
+import datasets
 import pandas as pd
 
 import config
-import src.elements.text_attributes as txa
 import src.functions.objects
-import src.functions.streams
 
 
 class Bars:
@@ -27,38 +25,26 @@ class Bars:
 
         # Instances
         self.__configurations = config.Config()
-        self.__streams = src.functions.streams.Streams()
 
         # Graphing categories
-        self.__categories = ['training', 'validating', 'testing']
-
-    def __data(self, uri: str) -> pd.DataFrame:
-        """
-
-        :param uri:
-        :return:
-        """
-
-        text = txa.TextAttributes(uri=uri, header=0)
-
-        return self.__streams.read(text=text)
+        self.__categories = ['train', 'validation', 'test']
 
     @staticmethod
-    def __frequencies(data: pd.DataFrame, stem: str):
+    def __frequencies(data: pd.DataFrame, name: str):
         """
 
         :param data:
         :return:
         """
 
-        # Tags: tag/annotation/annotation_name/category/category_name
-        frequencies = data['tagstr'].str.upper().str.split(pat=',', n=-1, expand=False).map(collections.Counter).sum()
+        # tags: tag|category|category_name|group & fine_ner_tags
+        frequencies = data['fine_ner_tags'].map(collections.Counter).sum()
         items = [[k, frequencies[k]] for k, v in frequencies.items()]
 
         # As a data frame
-        frame = pd.DataFrame(data=items, columns=['tag', 'frequency'])
-        frame.rename(columns={'frequency': stem}, inplace=True)
-        frame.set_index(keys='tag', drop=True, inplace=True)
+        frame = pd.DataFrame(data=items, columns=['fine_ner_tags', 'frequency'])
+        frame.rename(columns={'frequency': name}, inplace=True)
+        frame.set_index(keys='fine_ner_tags', drop=True, inplace=True)
 
         return frame
 
@@ -77,7 +63,7 @@ class Bars:
             section['stack'] = 'other/miscellaneous'
             section['visible'] = False
         else:
-            section['stack'] = values['annotation_name']
+            section['stack'] = 'entities'
             section['visible'] = True
 
         return section
@@ -91,27 +77,27 @@ class Bars:
 
         frame = pd.concat(computations, axis=1, ignore_index=False)
         frame.reset_index(drop=False, inplace=True)
-        data = frame.copy().merge(self.__tags.copy()[['tag', 'annotation_name', 'group']], how='left', on='tag')
+        data = frame.copy().merge(self.__tags.copy()[['fine_ner_tags', 'tag']], how='left', on='fine_ner_tags')
         data.set_index(keys='tag', drop=True, inplace=True)
 
         return data
 
-    def exc(self, uri_: list):
+    def exc(self, parts: datasets.DatasetDict):
         """
 
-        :param uri_:
+        :param parts:
         :return:
         """
 
         # Determining frequencies of tags per data set
         computations = []
-        for uri in uri_:
-            data = self.__data(uri=uri)
-            frequencies = self.__frequencies(data=data, stem=pathlib.Path(uri).stem)
+        for name in list(parts.keys()):
+            data = parts[name].to_pandas()
+            frequencies = self.__frequencies(data=data, name=name)
             computations.append(frequencies)
         frame = self.__structure(computations=computations)
 
-        # Convert each row into a dict of values vis-à-vis an annotation scheme
+        # Convert each row into a dict of values vis-à-vis tags
         sections = []
         for i in range(frame.shape[0]):
             values: pd.Series = frame.loc[frame.index[i], :]

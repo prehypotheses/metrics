@@ -2,7 +2,7 @@ var Highcharts;
 var optionSelected;
 var dropdown = $('#option_selector');
 
-var url = '../assets/menu/cost.json'
+var url = '../assets/menu/menu.json'
 
 
 // Menu details

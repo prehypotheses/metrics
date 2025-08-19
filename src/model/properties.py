@@ -51,7 +51,6 @@ class Properties:
         derivations = src.model.derivations.Derivations(cases=cases).exc()
         derivations.reset_index(drop=False, inplace=True)
         derivations.rename(columns={'index': 'tag'}, inplace=True)
-        derivations['tag'] = derivations['tag'].str.upper()
 
         return derivations
 

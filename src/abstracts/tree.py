@@ -1,14 +1,12 @@
 """Module tree.py"""
 import collections
 import os
-import pathlib
 
+import datasets
 import pandas as pd
 
 import config
-import src.elements.text_attributes as txa
 import src.functions.objects
-import src.functions.streams
 
 
 class Tree:
@@ -26,18 +24,12 @@ class Tree:
 
         # Instances
         self.__configurations = config.Config()
-        self.__streams = src.functions.streams.Streams()
 
-    def __data(self, uri: str) -> pd.DataFrame:
-        """
+        # Renaming
+        self.__rename = {'category': 'name', 'frequency': 'value', 'tag': 'description'}
 
-        :param uri:
-        :return:
-        """
-
-        text = txa.TextAttributes(uri=uri, header=0)
-
-        return self.__streams.read(text=text)
+        # Colours
+        self.__colours = {'train': '#A09FA8', 'validation': '#F5FBEF', 'test': '#A9B4C2'}
 
     def __frequencies(self, data: pd.DataFrame):
         """
@@ -46,33 +38,32 @@ class Tree:
         :return:
         """
 
-        # Tags: tag/annotation/annotation_name/category/category_name
-        descriptions = self.__tags[['tag', 'group']].set_index('tag').to_dict()['group']
-        frequencies = data['tagstr'].str.upper().str.split(pat=',', n=-1, expand=False).map(collections.Counter).sum()
+        # tags: tag|category|group & fine_ner_tags
+        descriptions = self.__tags[['fine_ner_tags', 'category']].set_index('fine_ner_tags').to_dict()['category']
+
+        # frequencies dictionary: Each key is a fine entity tag, whilst each value is the tag count
+        frequencies = data['fine_ner_tags'].map(collections.Counter).sum()
         items = [[k, frequencies[k], descriptions[k]] for k, v in frequencies.items()]
 
         # As a data frame
-        frame = pd.DataFrame(data=items, columns=['tag', 'frequency', 'group'])
-        frame = frame.copy().merge(self.__tags[['tag', 'annotation_name']], on='tag', how='left')
+        frame = pd.DataFrame(data=items, columns=['fine_ner_tags', 'frequency', 'category'])
+        frame = frame.copy().merge(self.__tags[['fine_ner_tags', 'tag']], on='fine_ner_tags', how='left')
 
         return frame
 
-    @staticmethod
-    def __restructuring(frequencies: pd.DataFrame) -> dict:
+    def __restructuring(self, frequencies: pd.DataFrame, part: str) -> dict | list[dict]:
         """
 
         :param frequencies:
+        :param part:
         :return:
         """
 
-        excerpt = frequencies.loc[frequencies['tag'] != 'O', :]
-        frame: pd.DataFrame = excerpt.pivot(index='group', columns='annotation_name', values='frequency')
-        node = frame.to_dict(orient='index')
+        frequencies['parent'] = part
+        frequencies.rename(columns=self.__rename, inplace=True)
+        node = frequencies.to_dict(orient='records')
 
-        miscellaneous = frequencies.loc[frequencies['tag'] == 'O', 'frequency'].values[0]
-        node['Miscellaneous'] = {'beginning': int(miscellaneous), 'inside': 0}
-
-        return node
+        return node + [{'id': part, 'name': part, 'color': self.__colours[part]}]
 
     def __persist(self, nodes:dict, name: str):
         """
@@ -86,20 +77,19 @@ class Tree:
             nodes=nodes,
             path=os.path.join(self.__configurations.numerics_, 'abstracts', f'{name }.json'))
 
-    def exc(self, uri_: list):
+    def exc(self, parts: datasets.DatasetDict):
         """
 
+        :param parts:
         :return:
         """
 
-        computation = collections.ChainMap()
+        computation = []
 
-        for uri in uri_:
-            stem = pathlib.Path(uri).stem
-            data = self.__data(uri=uri)
+        for part in list(parts.keys()):
+            data = parts[part].to_pandas()
             frequencies = self.__frequencies(data=data)
-            node = self.__restructuring(frequencies=frequencies)
-            computation.update({f'{stem}': node})
-        nodes = dict(computation)
+            node = self.__restructuring(frequencies=frequencies.copy(), part=part)
+            computation = computation + node
 
-        self.__persist(nodes=nodes, name='tree')
+        self.__persist(nodes=computation, name='tree')

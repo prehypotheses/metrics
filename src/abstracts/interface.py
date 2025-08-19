@@ -1,13 +1,16 @@
 """Module interface.py"""
-import glob
+import logging
 import os
+import warnings
 
+import datasets
 import pandas as pd
 
 import config
-import src.abstracts.tree
-import src.abstracts.text
 import src.abstracts.bars
+import src.abstracts.text
+import src.abstracts.tree
+import src.elements.s3_parameters as s3p
 import src.functions.objects
 
 
@@ -16,10 +19,14 @@ class Interface:
     The interface to the data package's classes
     """
 
-    def __init__(self):
+    def __init__(self, s3_parameters: s3p.S3Parameters):
         """
-        Constructor
+
+        :param s3_parameters: The overarching S3 parameters settings of this
+                              project, e.g., region code name, buckets, etc.
         """
+
+        self.__s3_parameters = s3_parameters
 
         self.__configurations = config.Config()
 
@@ -30,9 +37,23 @@ class Interface:
         """
 
         objects = src.functions.objects.Objects()
-        uri = os.path.join(self.__configurations.artefacts_, architecture, 'prime', 'model', 'config.json')
+        uri = os.path.join(self.__configurations.artefacts_, architecture, 'optimal', 'model', 'config.json')
 
         return objects.read(uri=uri)
+
+    def __get_data(self, architecture: str) -> datasets.DatasetDict:
+        """
+
+        :return:
+        """
+
+        # The data
+        dataset_path = ('s3://' + self.__s3_parameters.internal + '/' +
+                        self.__s3_parameters.path_internal_artefacts + architecture + '/data')
+        warnings.filterwarnings("ignore", message="promote has been superseded by promote_options='default'.",
+                                category=FutureWarning, module="awswrangler")
+
+        return datasets.load_from_disk(dataset_path=dataset_path)
 
     def exc(self, architecture: str, tags: pd.DataFrame):
         """
@@ -42,13 +63,22 @@ class Interface:
         :return:
         """
 
+        # The model's configuration details
         m_config = self.__m_config(architecture=architecture)
-        uri_ = glob.glob(pathname=os.path.join(self.__configurations.artefacts_, architecture, 'data', '*.csv'))
+
+        # Get the numeric code, i.e., `fine_ner_tags`, of each text label, i.e., `tag`
+        tags = tags.assign(fine_ner_tags=tags['tag'].map(m_config['label2id']))
+
+        # Get the modelling data
+        data = self.__get_data(architecture=architecture)
+        logging.info(data)
 
         # An approximate spread of strings
-        codes = [m_config['label2id'][key] for key in ['B-geo', 'I-geo']]
-        src.abstracts.text.Text().exc(uri_=uri_, codes=codes)
+        attributes = tags[['fine_ner_tags', 'category']].set_index(
+            keys='fine_ner_tags').to_dict(orient='dict')['category']
+        messages = [src.abstracts.text.Text(parts=data).exc(code=k, category=v) for k, v in attributes.items()]
+        logging.info(messages)
 
         # Distributions of tags.
-        src.abstracts.tree.Tree(tags=tags).exc(uri_=uri_)
-        src.abstracts.bars.Bars(tags=tags).exc(uri_=uri_)
+        src.abstracts.tree.Tree(tags=tags).exc(parts=data)
+        src.abstracts.bars.Bars(tags=tags).exc(parts=data)

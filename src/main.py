@@ -16,18 +16,13 @@ def main():
 
     logger: logging.Logger = logging.getLogger(__name__)
     logger.info('Starting: %s', datetime.datetime.now().isoformat(timespec='microseconds'))
-
-    # Set up
-    setup: bool = src.setup.Setup(service=service, s3_parameters=s3_parameters).exc()
-    if not setup:
-        src.functions.cache.Cache().exc()
-        sys.exit('No Executions')
+    logger.info(arguments)
 
     # Data
     src.data.interface.Interface(service=service, s3_parameters=s3_parameters).exc()
 
     # Tags
-    tags = src.model.tags.Tags(s3_parameters=s3_parameters).exc()
+    tags = src.model.tags.Tags(s3_parameters=s3_parameters, arguments=arguments).exc()
 
     # The best model/architecture
     architecture: str = src.model.architecture.Architecture().exc()
@@ -38,13 +33,12 @@ def main():
 
     # The error measures & metrics of the model
     properties = src.model.properties.Properties(architecture=architecture).exc(tags=tags)
-    logger.info(properties.derivations)
 
     # Analytics
     src.analytics.interface.Interface(s3_parameters=s3_parameters).exc(derivations=properties.derivations, tags=tags)
 
     # Abstracts
-    src.abstracts.interface.Interface().exc(architecture=properties.architecture, tags=tags)
+    src.abstracts.interface.Interface(s3_parameters=s3_parameters).exc(architecture=properties.architecture, tags=tags)
 
     # Transfer
     src.transfer.interface.Interface(service=service, s3_parameters=s3_parameters).exc()
@@ -70,6 +64,9 @@ if __name__ == '__main__':
     import src.analytics.interface
     import src.data.interface
 
+    import src.elements.s3_parameters as s3p
+    import src.elements.service as sr
+
     import src.functions.service
     import src.functions.cache
     import src.model.architecture
@@ -77,13 +74,13 @@ if __name__ == '__main__':
     import src.model.latest
     import src.model.tags
 
-    import src.s3.s3_parameters
-    import src.setup
+    import src.preface.interface
     import src.transfer.interface
 
-    # S3 S3Parameters, Service Instance
-    connector = boto3.session.Session()
-    s3_parameters = src.s3.s3_parameters.S3Parameters(connector=connector).exc()
-    service = src.functions.service.Service(connector=connector, region_name=s3_parameters.region_name).exc()
+    connector: boto3.session.Session
+    s3_parameters: s3p
+    service: sr.Service
+    arguments: dict
+    connector, s3_parameters, service, arguments = src.preface.interface.Interface().exc()
 
     main()

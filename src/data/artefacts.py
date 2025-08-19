@@ -48,7 +48,7 @@ class Artefacts:
         """
 
         listings = [[prefix + partition]
-                    for partition in ['data', 'prime/model', 'prime/metrics']
+                    for partition in ['data', 'optimal/model', 'optimal/metrics']
                     for prefix in keys]
         listings = sum(listings, [])
 

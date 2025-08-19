@@ -1,13 +1,11 @@
 """Module interface.py"""
-import logging
-
 import numpy as np
 import pandas as pd
 
 import config
 import src.analytics.bullet
 import src.analytics.cost
-import src.analytics.spider
+import src.analytics.scores
 import src.data.limits
 import src.elements.limits as lm
 import src.elements.s3_parameters as s3p
@@ -53,11 +51,10 @@ class Interface:
         """
 
         # The boundaries array is a (1 X 2) vector
-        boundaries: np.ndarray = limits.dispatches.product(axis=1).values[None, ...]
+        boundaries: np.ndarray = limits.documents.product(axis=1).values[None, ...]
         numbers = limits.frequencies.copy()
         numbers['minimum'] = boundaries.min() * numbers['minimum']/100
         numbers['maximum'] = boundaries.max() * numbers['maximum']/100
-        logging.info(numbers)
 
         return numbers
 
@@ -69,9 +66,9 @@ class Interface:
         :return:
         """
 
-        values = tags[['category', 'category_name']].set_index(keys='category').to_dict(orient='dict')
+        values = tags[['tag', 'category']].set_index(keys='tag').to_dict(orient='dict')
 
-        return values['category_name']
+        return values['category']
 
     def exc(self, derivations: pd.DataFrame, tags: pd.DataFrame) -> None:
         """
@@ -87,11 +84,11 @@ class Interface:
         # Numbers
         numbers = self.__numbers(limits=limits)
 
-        # Definitions: Whereby key === category code, value === category code definition
+        # Definitions: Whereby key === tag, value === category, i.e., definition
         definitions = self.__definitions(tags=tags)
 
         # For (a) spider graphs of error metrics, (b) bullet graphs of false negative rates & false positive
         # rates, (c) cost curves
-        src.analytics.spider.Spider().exc(derivations=derivations, definitions=definitions)
+        src.analytics.scores.Scores().exc(derivations=derivations, definitions=definitions)
         src.analytics.bullet.Bullet(error=limits.error).exc(derivations=derivations, definitions=definitions)
         src.analytics.cost.Cost(limits=limits, numbers=numbers, derivations=derivations).exc(definitions=definitions)

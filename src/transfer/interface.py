@@ -15,7 +15,7 @@ class Interface:
     Class Interface
     """
 
-    def __init__(self, service: sr.Service,  s3_parameters: s3p):
+    def __init__(self, service: sr.Service, s3_parameters: s3p.S3Parameters):
         """
 
         :param service: A suite of services for interacting with Amazon Web Services.
@@ -38,8 +38,9 @@ class Interface:
         # The strings for transferring data to Amazon S3 (Simple Storage Service)
         strings: pd.DataFrame = self.__dictionary.exc(
             path=os.path.join(os.getcwd(), 'warehouse'), extension='*', prefix='warehouse/')
+        logging.info(strings)
 
         # Transfer
         messages = src.s3.ingress.Ingress(
-            service=self.__service, bucket_name=self.__s3_parameters.external).exc(strings=strings)
+            service=self.__service, bucket_name=self.__s3_parameters.external).exc(strings=strings, tagging='project=few')
         logging.info(messages)
