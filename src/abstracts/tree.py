@@ -1,4 +1,5 @@
 """Module tree.py"""
+import logging
 import collections
 import os
 
@@ -25,6 +26,12 @@ class Tree:
         # Instances
         self.__configurations = config.Config()
 
+        # Renaming
+        self.__rename = {'category_name': 'name', 'frequency': 'value', 'tag': 'description'}
+
+        # Colours
+        self.__colours = {'train': '#A09FA8', 'validation': '#F5FBEF', 'test': '#A9B4C2'}
+
     def __frequencies(self, data: pd.DataFrame):
         """
 
@@ -41,22 +48,23 @@ class Tree:
 
         # As a data frame
         frame = pd.DataFrame(data=items, columns=['fine_ner_tags', 'frequency', 'category_name'])
-        frame = frame.copy().merge(self.__tags[['fine_ner_tags', 'tag', 'group']], on='fine_ner_tags', how='left')
+        frame = frame.copy().merge(self.__tags[['fine_ner_tags', 'tag']], on='fine_ner_tags', how='left')
 
         return frame
 
-    @staticmethod
-    def __restructuring(frequencies: pd.DataFrame) -> dict | list[dict]:
+    def __restructuring(self, frequencies: pd.DataFrame, part: str) -> dict | list[dict]:
         """
 
         :param frequencies:
+        :param part:
         :return:
         """
 
-
+        frequencies['parent'] = part
+        frequencies.rename(columns=self.__rename, inplace=True)
         node = frequencies.to_dict(orient='records')
 
-        return node
+        return node + [{'id': part, 'name': part, 'color': self.__colours[part]}]
 
     def __persist(self, nodes:dict, name: str):
         """
@@ -77,13 +85,13 @@ class Tree:
         :return:
         """
 
-        computation = collections.ChainMap()
+        computation = []
 
-        for name in list(parts.keys()):
-            data = parts[name].to_pandas()
+        for part in list(parts.keys()):
+            data = parts[part].to_pandas()
             frequencies = self.__frequencies(data=data)
-            node = self.__restructuring(frequencies=frequencies)
-            computation.update({f'{name}': node})
-        nodes = dict(computation)
+            node = self.__restructuring(frequencies=frequencies.copy(), part=part)
+            logging.info(node)
+            computation = computation + node
 
-        self.__persist(nodes=nodes, name='tree')
+        self.__persist(nodes=computation, name='tree')
