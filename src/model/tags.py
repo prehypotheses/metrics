@@ -17,14 +17,18 @@ class Tags:
     Retrieves the <tags> inventory
     """
 
-    def __init__(self, s3_parameters: s3p.S3Parameters):
+    def __init__(self, s3_parameters: s3p.S3Parameters, arguments: dict):
         """
 
         :param s3_parameters: The overarching S3 (Simple Storage Service) parameters
                               settings of this project, e.g., region code name, buckets, etc.
+        :param arguments: https://github.com/prehypotheses/configurations/blob/master/data/numerics/arguments.json
         """
 
         self.__s3_parameters = s3_parameters
+        self.__arguments = arguments
+
+        # Configurations
         self.__configurations = config.Config()
 
     def exc(self) -> pd.DataFrame:
@@ -34,7 +38,9 @@ class Tags:
         """
 
         # Setting up
-        uri = 's3://' + self.__s3_parameters.configurations + f'/{self.__configurations.tags_key}'
+        bucket: str = self.__s3_parameters.internal
+        path: str = self.__arguments.get('tags_key')
+        uri = 's3://' + path.format(bucket=bucket)
         text = txa.TextAttributes(uri=uri, header=0)
 
         # Read the tags data
