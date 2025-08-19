@@ -37,7 +37,7 @@ class Config:
                         os.path.join(self.numerics_, 'card', 'scores'),
                         os.path.join(self.numerics_, 'cost', 'fnr'),
                         os.path.join(self.numerics_, 'cost', 'fpr'),
-                        os.path.join(self.numerics_, 'abstracts')]
+                        os.path.join(self.numerics_, 'abstracts', 'text')]
 
         # Rates, self.__rates: np.ndarray = self.__rates[..., None]
         # :param rates: An array of rate values; (0, 1\]<br>
