@@ -23,7 +23,6 @@ def main():
 
     # Tags
     tags = src.model.tags.Tags(s3_parameters=s3_parameters).exc()
-    logger.info(tags)
 
     # The best model/architecture
     architecture: str = src.model.architecture.Architecture().exc()
@@ -34,8 +33,6 @@ def main():
 
     # The error measures & metrics of the model
     properties = src.model.properties.Properties(architecture=architecture).exc(tags=tags)
-    logger.info(properties.architecture)
-    logger.info(properties.derivations)
 
     # Analytics
     src.analytics.interface.Interface(s3_parameters=s3_parameters).exc(derivations=properties.derivations, tags=tags)
