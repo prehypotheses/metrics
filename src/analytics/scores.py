@@ -67,23 +67,23 @@ class Scores:
 
         :param derivations: A data frame consisting of error matrix frequencies & metrics, alongside
                             tags & categories identifiers.
-        :param definitions: A dict wherein key === category code, value === category code definition
+        :param definitions: A dict wherein key === tag, value === category
         :return:
         """
 
         data = derivations.copy()
 
-        # The unique tag categories
-        categories = data['category'].unique()
+        # The unique tags
+        tags = data['tag'].unique()
 
         # The tag & category values are required for data structuring
         data.set_index(keys=['tag', 'category'], drop=False, inplace=True)
 
         # Hence
         computations = []
-        for category in categories:
-            name = definitions[category]
-            excerpt: pd.DataFrame = data.loc[data['category'] == category, self.__names.keys()]
+        for tag in tags:
+            name = definitions[tag]
+            excerpt: pd.DataFrame = data.loc[data['tag'] == tag, self.__names.keys()]
             message = self.__build(excerpt=excerpt, name=name)
             computations.append(message)
 
