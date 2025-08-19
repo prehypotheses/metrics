@@ -39,7 +39,6 @@ class Interface:
         strings: pd.DataFrame = self.__dictionary.exc(
             path=os.path.join(os.getcwd(), 'warehouse'), extension='*', prefix='warehouse/')
         logging.info(strings)
-        strings.to_csv('strings.csv', header=True, index=False, encoding='utf-8')
 
         # Transfer
         messages = src.s3.ingress.Ingress(
