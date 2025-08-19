@@ -67,11 +67,11 @@ class Text:
             nodes=nodes,
             path=os.path.join(self.__configurations.numerics_, 'abstracts', 'text', f'{name}.json'))
 
-    def exc(self, code: int, category_name: str) -> str:
+    def exc(self, code: int, category: str) -> str:
         """
 
         :param code:
-        :param category_name:
+        :param category:
         :return:
         """
 
@@ -86,4 +86,4 @@ class Text:
 
         nodes = {key: {'data': value} for section in sections for key, value in section.items()}
 
-        return self.__persist(nodes=nodes, name=category_name)
+        return self.__persist(nodes=nodes, name=category)
