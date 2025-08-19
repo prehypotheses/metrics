@@ -1,6 +1,4 @@
 """Module tce.py"""
-import logging
-
 import pandas as pd
 
 
