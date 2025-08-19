@@ -21,7 +21,6 @@ class Config:
         # Keys, etc
         self.s3_parameters_key = 's3_parameters.yaml'
         self.arguments_key = 'numerics/arguments.json'
-        self.tags_key = 'numerics/tags.csv'
 
         # Temporary storage area for the artefacts
         self.data_: str = os.path.join(os.getcwd(), 'data')
