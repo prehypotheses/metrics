@@ -74,8 +74,9 @@ class Interface:
         logging.info(data)
 
         # An approximate spread of strings
-        # codes = [m_config['label2id'][key] for key in ['location-GPE']]
-        # src.abstracts.text.Text().exc(uri_=uri_, codes=codes)
+        attributes = tags[['fine_ner_tags', 'category_name']].set_index(keys='fine_ner_tags').to_dict(orient='dict')['category_name']
+        messages = [src.abstracts.text.Text(parts=data).exc(code=k, category_name=v) for k, v in attributes.items()]
+        logging.info(messages)
 
         # Distributions of tags.
         src.abstracts.tree.Tree(tags=tags).exc(parts=data)
