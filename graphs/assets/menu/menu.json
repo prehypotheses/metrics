@@ -1,11 +1,8 @@
 [
   {"desc": "art", "name": "Art"},
   {"desc": "building", "name": "Building"},
-  {"desc": "conflict", "name": "Event: Conflict"},
-  {"desc": "bodies-of-water", "name": "Location: Bodies of Water"},
-  {"desc": "geo-political-entity", "name": "Location: Geo-political Entity"},
-  {"desc": "island", "name": "Location: Island"},
-  {"desc": "transport", "name": "Location: Transport"},
+  {"desc": "event", "name": "Event"},
+  {"desc": "location", "name": "Location"},
   {"desc": "miscellaneous", "name": "Miscellaneous"},
   {"desc": "organisation", "name": "Organisation"},
   {"desc": "person", "name": "Person"},
