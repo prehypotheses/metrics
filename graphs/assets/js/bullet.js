@@ -41,7 +41,7 @@ dropdown.on('change', function (e) {
 // Graphs/s
 function generateChart(fileNameKey) {
 
-    $.getJSON('../../warehouse/numerics/card/bullet/' + fileNameKey + '.json', function (calculations) {
+    $.getJSON('../../warehouse/metrics/card/bullet/' + fileNameKey + '.json', function (calculations) {
 
         const maximum = 0.45;
 
