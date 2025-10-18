@@ -1,4 +1,5 @@
 """Module bars.py"""
+import logging
 import collections
 import json
 import os
@@ -105,5 +106,6 @@ class Bars:
 
         # Persist
         nodes = {'categories': self.__categories, 'series': sections}
-        src.functions.objects.Objects().write(
+        message = src.functions.objects.Objects().write(
             nodes=nodes, path=os.path.join(self.__configurations.metrics_, 'abstracts', 'bars.json'))
+        logging.info('distribution bars graph: %s', message)
