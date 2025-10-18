@@ -98,4 +98,4 @@ class Cost:
             computations.append([_fnr, _fpr])
 
         calculations = dask.compute(computations, scheduler='threads')[0]
-        logging.info(calculations)
+        logging.info('cost:\n%s', calculations)
