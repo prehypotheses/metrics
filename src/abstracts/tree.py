@@ -75,7 +75,7 @@ class Tree:
 
         src.functions.objects.Objects().write(
             nodes=nodes,
-            path=os.path.join(self.__configurations.numerics_, 'abstracts', f'{name }.json'))
+            path=os.path.join(self.__configurations.metrics_, 'abstracts', f'{name }.json'))
 
     def exc(self, parts: datasets.DatasetDict):
         """
