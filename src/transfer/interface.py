@@ -7,6 +7,7 @@ import pandas as pd
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
 import src.s3.ingress
+import src.transfer.cloud
 import src.transfer.dictionary
 
 
@@ -29,7 +30,7 @@ class Interface:
         # Instances
         self.__dictionary = src.transfer.dictionary.Dictionary()
 
-    def exc(self):
+    def exc(self) -> None:
         """
 
         :return:
@@ -41,6 +42,14 @@ class Interface:
         logging.info(strings)
 
         # Transfer
-        messages = src.s3.ingress.Ingress(
-            service=self.__service, bucket_name=self.__s3_parameters.external).exc(strings=strings, tagging='project=few')
-        logging.info(messages)
+        cloud = src.transfer.cloud.Cloud(
+            service=self.__service, s3_parameters=self.__s3_parameters).exc()
+
+        if cloud:
+            messages = src.s3.ingress.Ingress(
+                service=self.__service, bucket_name=self.__s3_parameters.external).exc(strings=strings, tagging='project=few')
+            logging.info(messages)
+        else:
+            logging.info('Unable to create a cloud hosting hub, consequently graphing elements were not transferred.')
+
+        return None
