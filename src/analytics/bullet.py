@@ -95,4 +95,4 @@ class Bullet:
             computations.append(message)
 
         messages = dask.compute(computations, scheduler='threads')[0]
-        logging.info(messages)
+        logging.info('bullet:\n%s', messages)
