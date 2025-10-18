@@ -106,4 +106,4 @@ class Bars:
         # Persist
         nodes = {'categories': self.__categories, 'series': sections}
         src.functions.objects.Objects().write(
-            nodes=nodes, path=os.path.join(self.__configurations.numerics_, 'abstracts', 'bars.json'))
+            nodes=nodes, path=os.path.join(self.__configurations.metrics_, 'abstracts', 'bars.json'))
