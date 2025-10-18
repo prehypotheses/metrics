@@ -1,5 +1,4 @@
 """Module setup.py"""
-import os
 
 import config
 import src.elements.s3_parameters as s3p
@@ -34,29 +33,6 @@ class Setup:
         # Directories instance
         self.__directories = src.functions.directories.Directories()
 
-        # The prefix in focus within the Amazon S3 bucket in focus.
-        self.__prefix = (os.path.basename(self.__configurations.warehouse) + '/' +
-                         os.path.basename(self.__configurations.numerics_) + '/')
-
-    def __clear_prefix(self) -> bool:
-        """
-
-        :return:
-        """
-
-        # An instance for interacting with objects within an Amazon S3 prefix
-        instance = src.s3.prefix.Prefix(service=self.__service, bucket_name=self.__bucket_name)
-
-        # Get the keys therein
-        keys: list[str] = instance.objects(prefix=self.__prefix)
-
-        if len(keys) > 0:
-            objects = [{'Key' : key} for key in keys]
-            state = instance.delete(objects=objects)
-            return bool(state)
-
-        return True
-
     def __s3(self) -> bool:
         """
         Prepares the relevant path within an Amazon S3 (Simple Storage Service) bucket.
@@ -70,7 +46,7 @@ class Setup:
 
         # If the bucket exist, the prefix path is cleared.  Otherwise, the bucket is created.
         if bucket.exists():
-            self.__clear_prefix()
+            return True
 
         return bucket.create()
 
