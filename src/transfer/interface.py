@@ -51,5 +51,3 @@ class Interface:
             logging.info(messages)
         else:
             logging.info('Unable to create a cloud hosting hub, consequently graphing elements were not transferred.')
-
-        return None
