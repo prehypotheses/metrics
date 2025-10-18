@@ -2,9 +2,9 @@
   {"desc": "art", "name": "Art"},
   {"desc": "building", "name": "Building"},
   {"desc": "event", "name": "Event"},
-  {"desc": "location", "name": "Location"},
+  {"desc": "gpe", "name": "Geo-political Entity"},
   {"desc": "miscellaneous", "name": "Miscellaneous"},
   {"desc": "organisation", "name": "Organisation"},
   {"desc": "person", "name": "Person"},
-  {"desc": "weapon", "name": "Product: Weapon"}
+  {"desc": "weapon", "name": "Weapon"}
 ]
