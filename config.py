@@ -20,7 +20,7 @@ class Config:
 
         # Keys, etc
         self.s3_parameters_key = 's3_parameters.yaml'
-        self.arguments_key = 'numerics/arguments.json'
+        self.arguments_key = 'metrics/arguments.json'
 
         # Temporary storage area for the artefacts
         self.data_: str = os.path.join(os.getcwd(), 'data')
@@ -31,13 +31,13 @@ class Config:
 
         # Temporary storage area for the mathematical & business metrics
         self.warehouse = os.path.join(os.getcwd(), 'warehouse')
-        self.numerics_ = os.path.join(self.warehouse, 'numerics')
-        self.graphs_ = [os.path.join(self.numerics_, 'best', 'model'),
-                        os.path.join(self.numerics_, 'card', 'bullet'),
-                        os.path.join(self.numerics_, 'card', 'scores'),
-                        os.path.join(self.numerics_, 'cost', 'fnr'),
-                        os.path.join(self.numerics_, 'cost', 'fpr'),
-                        os.path.join(self.numerics_, 'abstracts', 'text')]
+        self.metrics_ = os.path.join(self.warehouse, 'metrics')
+        self.graphs_ = [os.path.join(self.metrics_, 'best', 'model'),
+                        os.path.join(self.metrics_, 'card', 'bullet'),
+                        os.path.join(self.metrics_, 'card', 'scores'),
+                        os.path.join(self.metrics_, 'cost', 'fnr'),
+                        os.path.join(self.metrics_, 'cost', 'fpr'),
+                        os.path.join(self.metrics_, 'abstracts', 'text')]
 
         # Rates
         self.rates: np.ndarray = np.linspace(start=0, stop=1, num=101)
