@@ -3,7 +3,7 @@ var Highcharts;
 
 
 // Generate curves
-jQuery.getJSON('../../warehouse/numerics/abstracts/bars.json', function (source){
+jQuery.getJSON('../../warehouse/metrics/abstracts/bars.json', function (source){
 
 	// Numbers
 	let categories = source.categories;
