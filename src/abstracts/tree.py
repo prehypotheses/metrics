@@ -1,4 +1,5 @@
 """Module tree.py"""
+import logging
 import collections
 import os
 
@@ -73,9 +74,10 @@ class Tree:
         :return:
         """
 
-        src.functions.objects.Objects().write(
+        message = src.functions.objects.Objects().write(
             nodes=nodes,
             path=os.path.join(self.__configurations.metrics_, 'abstracts', f'{name }.json'))
+        logging.info('distribution tree: %s', message)
 
     def exc(self, parts: datasets.DatasetDict):
         """
