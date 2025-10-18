@@ -20,7 +20,8 @@ class Config:
 
         # Keys, etc
         self.s3_parameters_key = 's3_parameters.yaml'
-        self.arguments_key = 'metrics/arguments.json'
+        self.configurations_segment_ = 'metrics/'
+        self.arguments_key = f'{self.configurations_segment_}arguments.json'
 
         # Temporary storage area for the artefacts
         self.data_: str = os.path.join(os.getcwd(), 'data')
