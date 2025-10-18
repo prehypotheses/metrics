@@ -1,6 +1,7 @@
 """Module limits.py"""
 import pandas as pd
 
+import config
 import src.elements.limits as lm
 import src.elements.s3_parameters as s3p
 
@@ -22,7 +23,8 @@ class Limits:
         self.__s3_parameters = s3_parameters
 
         # The Amazon S3 (Simple Storage Service) path.
-        self.__path = f's3://{self.__s3_parameters.configurations}/numerics/'
+        self.__configurations = config.Config()
+        self.__path = f's3://{self.__s3_parameters.configurations}/{self.__configurations.configurations_segment_}'
 
     def __get_data(self, filename: str, orient: str):
         """
