@@ -65,7 +65,7 @@ class Text:
 
         return src.functions.objects.Objects().write(
             nodes=nodes,
-            path=os.path.join(self.__configurations.numerics_, 'abstracts', 'text', f'{name}.json'))
+            path=os.path.join(self.__configurations.metrics_, 'abstracts', 'text', f'{name}.json'))
 
     def exc(self, code: int, category: str) -> str:
         """
