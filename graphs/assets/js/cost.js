@@ -39,7 +39,7 @@ dropdown.on('change', function (e) {
 // Graphs/s
 function generateChart(fileNameKey) {
 
-    $.getJSON('../../warehouse/numerics/cost/fnr/' + fileNameKey + '.json', function (calculations) {
+    $.getJSON('../../warehouse/metrics/cost/fnr/' + fileNameKey + '.json', function (calculations) {
 
         let data = calculations.data;
         let numbers = calculations.approximate_annual_numbers;
@@ -117,7 +117,7 @@ function generateChart(fileNameKey) {
     });
 
 
-    $.getJSON('../../warehouse/numerics/cost/fpr/' + fileNameKey + '.json', function (calculations) {
+    $.getJSON('../../warehouse/metrics/cost/fpr/' + fileNameKey + '.json', function (calculations) {
 
         let data = calculations.data;
         let numbers = calculations.approximate_annual_numbers;
