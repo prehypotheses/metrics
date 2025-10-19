@@ -28,7 +28,7 @@ class Scores:
 
         # Setting-up
         self.__objects = src.functions.objects.Objects()
-        self.__path = os.path.join(config.Config().numerics_, 'card', 'scores')
+        self.__path = os.path.join(config.Config().metrics_, 'card', 'scores')
 
         # The metrics in focus
         self.__names = {'precision': "Precision", 'sensitivity': "Sensitivity", 'specificity': 'Specificity',
@@ -88,4 +88,4 @@ class Scores:
             computations.append(message)
 
         messages = dask.compute(computations, scheduler='threads')[0]
-        logging.info(messages)
+        logging.info('scores:\n%s', messages)

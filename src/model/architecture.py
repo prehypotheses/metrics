@@ -26,7 +26,7 @@ class Architecture:
 
         # Configurations
         self.__configurations = config.Config()
-        self.__storage = os.path.join(self.__configurations.numerics_, 'best')
+        self.__storage = os.path.join(self.__configurations.metrics_, 'best')
 
         # A JSON (JavaScript Object Notation) read & write instance
         self.__objects = src.functions.objects.Objects()

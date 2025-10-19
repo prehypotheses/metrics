@@ -71,13 +71,14 @@ class Interface:
 
         # Get the modelling data
         data = self.__get_data(architecture=architecture)
-        logging.info(data)
+        logging.info('The model development data; the hub will host data graphs, e.g., a text cloud, '
+                     'a distribution \ntree, a distribution bars graph, etc.\n\n%s', data)
 
         # An approximate spread of strings
         attributes = tags[['fine_ner_tags', 'category']].set_index(
             keys='fine_ner_tags').to_dict(orient='dict')['category']
         messages = [src.abstracts.text.Text(parts=data).exc(code=k, category=v) for k, v in attributes.items()]
-        logging.info(messages)
+        logging.info('text cloud:\n%s', messages)
 
         # Distributions of tags.
         src.abstracts.tree.Tree(tags=tags).exc(parts=data)

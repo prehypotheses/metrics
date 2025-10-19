@@ -22,7 +22,7 @@ class Latest:
         self.__configurations = config.Config()
 
         # The path to the latest best model ...
-        self.__latest_ = os.path.join(self.__configurations.numerics_, 'best')
+        self.__latest_ = os.path.join(self.__configurations.metrics_, 'best')
 
         # Logging
         logging.basicConfig(level=logging.INFO,

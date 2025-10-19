@@ -77,7 +77,7 @@ class Cost:
         """
 
         # The file name, and path; path = directory + file name
-        path = os.path.join(self.__configurations.numerics_, 'cost', metric, f'{name}.json')
+        path = os.path.join(self.__configurations.metrics_, 'cost', metric, f'{name}.json')
 
         return self.__objects.write(nodes=nodes, path=path)
 
@@ -98,4 +98,4 @@ class Cost:
             computations.append([_fnr, _fpr])
 
         calculations = dask.compute(computations, scheduler='threads')[0]
-        logging.info(calculations)
+        logging.info('cost:\n%s', calculations)

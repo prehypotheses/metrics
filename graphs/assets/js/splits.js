@@ -1,5 +1,5 @@
 
-$.getJSON('../../warehouse/numerics/abstracts/tree.json', function (data) {
+$.getJSON('../../warehouse/metrics/abstracts/tree.json', function (data) {
 
 
 
@@ -48,7 +48,7 @@ $.getJSON('../../warehouse/numerics/abstracts/tree.json', function (data) {
             data: data
         }],
         subtitle: {
-            text: 'Click points to drill down; <a href="https://github.com/prehypotheses/numerics/graphs/assets/js/splits.js">code</a>.',
+            text: 'Click points to drill down; <a href="https://github.com/prehypotheses/metrics/graphs/assets/js/splits.js">code</a>.',
             align: 'left'
         },
         title: {

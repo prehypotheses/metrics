@@ -21,7 +21,7 @@ class Tags:
 
         :param s3_parameters: The overarching S3 (Simple Storage Service) parameters
                               settings of this project, e.g., region code name, buckets, etc.
-        :param arguments: https://github.com/prehypotheses/configurations/blob/master/data/numerics/arguments.json
+        :param arguments: https://github.com/prehypotheses/configurations/blob/master/data/metrics/arguments.json
         """
 
         self.__s3_parameters = s3_parameters
